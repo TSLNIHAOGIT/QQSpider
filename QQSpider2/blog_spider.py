@@ -1,7 +1,7 @@
 # coding=utf-8
 import re
 import datetime
-import itertools
+# import itertools
 from bs4 import BeautifulSoup
 from multiprocessing.dummy import Pool
 
@@ -10,6 +10,7 @@ class BlogSpider(object):
     """ 功能：爬取QQ日志 """
 
     def __init__(self, spiderMessage, changer):
+        print('start blog_spider')
         self.message = spiderMessage
         self.changer = changer
 
@@ -17,7 +18,7 @@ class BlogSpider(object):
         blog_list = self.get_blog_list()  # 获取日志ID列表
         if blog_list:
             pool = Pool(self.changer.my_messages.thread_num_Blog)
-            myBlog = pool.map(self.get_blog, itertools.izip(blog_list.keys(), blog_list.values()))
+            myBlog = pool.map(self.get_blog, zip(blog_list.keys(), blog_list.values()))
             pool.close()
             pool.join()
             fail = myBlog.count(-1)  # 对于获取失败的日志，需要清除
@@ -47,7 +48,7 @@ class BlogSpider(object):
                             return bloglist
                         text = r.text
                     except Exception:
-                        print "BlogSpider.get_blog_list:获取Cookie失败，此线程关闭！"
+                        print ("BlogSpider.get_blog_list:获取Cookie失败，此线程关闭！")
                         exit()
                 bidlist = re.findall('"blogId":(\d+),.*?"pubTime":"(.*?)",.*?"title":"(.*?)",.*?"commentNum":(\d+)',
                                      text, re.S)  # 发表时间、日志标题、评论数
@@ -67,10 +68,10 @@ class BlogSpider(object):
                             pagedown = True
                         else:
                             pagedown = False
-                    except Exception, e:
+                    except Exception as e:
                         pass
                 posnum += 15
-            except Exception, e:
+            except Exception as e:
                 failure += 1
         return bloglist
 
@@ -105,7 +106,7 @@ class BlogSpider(object):
                         if result == -1:
                             return -1
                         return myBlog
-            except Exception, e:
+            except Exception as e:
                 failure += 1
         return -1  # 如果失败次数太大则返回失败
 
@@ -137,5 +138,5 @@ class BlogSpider(object):
                     myBlog["Like"] = int(temp3[0][0])
                     myBlog["Share"] = int(temp3[0][1])
                     myBlog["Transfer"] = int(temp3[0][2])
-        except Exception, e:
+        except Exception as  e:
             return -1

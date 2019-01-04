@@ -7,6 +7,7 @@ class InformationSpider(object):
     """ 功能：爬取QQ个人信息（和空间信息） """
 
     def __init__(self, spiderMessage, changer):
+        print('start InformationSpider')
         self.message = spiderMessage
         self.changer = changer
         self.hash_gender = {0: 'Unknown', 1: '男', 2: '女'}
@@ -17,7 +18,10 @@ class InformationSpider(object):
 
     def beginer(self):
         failure = 0
-        while failure < self.message.fail_time:
+        print('go informationspider.beginer')
+        print('''self.message.fail_time''',self.message.fail_time)
+        # while failure < self.message.fail_time:
+        while failure < 2:
             myInformation = {}
             try:
                 myInformation["_id"] = self.message.qq
@@ -25,6 +29,7 @@ class InformationSpider(object):
                 myInformation["Moods_WeGet"] = 0
                 myInformation["FriendsNum"] = 0
                 result1 = self.get_personal_information(myInformation)  # 获取个人信息
+                print('result1',result1)
                 if not result1:  # 如果个人信息获取失败，直接返回
                     return {}
                 result2 = self.get_qzone_information0(myInformation)  # 获取空间信息
@@ -42,7 +47,7 @@ class InformationSpider(object):
             self.message.qq, self.message.account, str(self.message.gtk))
         r = self.message.s.get(url, timeout=self.message.timeout)
         if r.status_code == 403:
-            print '个人信息403 %s' % url
+            print ('个人信息403 %s' % url)
             return False
         text = r.text
         if "您无权访问" in text:
@@ -52,11 +57,11 @@ class InformationSpider(object):
                 self.changer.changeCookie(self.message)
                 r = self.message.s.get(url, timeout=self.message.timeout)
                 if r.status_code == 403:
-                    print '个人信息403 %s' % url
+                    print ('个人信息403 %s' % url)
                     return False
                 text = r.text
-            except Exception, e:
-                print "InformationSpider.get_personal_information:获取Cookie失败，此线程关闭！"
+            except Exception as e:
+                print ("InformationSpider.get_personal_information:获取Cookie失败，此线程关闭！")
                 exit()
         gender = re.findall('"sex":(\d+)', text)  # 性别
         age = re.findall('"age":(\d+)', text)  # 年龄
@@ -206,7 +211,7 @@ class InformationSpider(object):
             try:
                 self.changer.changeCookie(self.message)
             except Exception:
-                print "InformationSpider.get_qzone_information1:获取Cookie失败，此线程关闭！"
+                print ("InformationSpider.get_qzone_information1:获取Cookie失败，此线程关闭！")
                 exit()
         try:
             pageView_temp1 = re.split('"modvisitcount"', text)[1]

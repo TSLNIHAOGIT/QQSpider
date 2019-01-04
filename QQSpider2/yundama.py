@@ -1,5 +1,11 @@
 # encoding=utf-8
-import httplib, mimetypes, urlparse, json, time
+
+
+import  mimetypes,  json, time
+# import httplib,urlparse
+
+import http.client
+from urllib.parse import urlparse
 
 ######################################################################
 
@@ -43,6 +49,7 @@ class YDMHttp:
     appkey = ''
 
     def __init__(self, username, password, appid, appkey):
+        print('start YDMHttp')
         self.username = username
         self.password = password
         self.appid = str(appid)
@@ -122,7 +129,8 @@ def post_url(url, fields, files=[]):
 
 def post_multipart(host, selector, fields, files):
     content_type, body = encode_multipart_formdata(fields, files)
-    h = httplib.HTTP(host)
+    # h = httplib.HTTP(host)
+    h=http.client.HTTP(host)
     h.putrequest('POST', selector)
     h.putheader('Host', host)
     h.putheader('Content-Type', content_type)
@@ -168,7 +176,7 @@ def get_content_type(filename):
 
 def identify():
     if (username == 'username'):
-        print '请设置好相关参数再测试'
+        print ('请设置好相关参数再测试')
     else:
         # 初始化
         yundama = YDMHttp(username, password, appid, appkey)

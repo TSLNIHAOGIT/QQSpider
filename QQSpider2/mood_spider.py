@@ -8,6 +8,7 @@ class MoodSpider(object):
     """ 功能：爬取QQ说说 """
 
     def __init__(self, spiderMessage, changer):
+        print('start MoodSpider')
         self.message = spiderMessage
         self.changer = changer
 
@@ -22,7 +23,7 @@ class MoodSpider(object):
                         self.message.qq, (page - 1) * 20, self.message.gtk)
                     r = self.message.s.get(url, timeout=self.message.timeout)
                     if r.status_code == 403:
-                        print self.message.qq, 'status_code is 403, now stop(mood.beginer)'
+                        print( self.message.qq, 'status_code is 403, now stop(mood.beginer)')
                         return myMood
                     text = r.text
                     while u'请先登录空间' in text:  # Cookie失效
@@ -35,7 +36,7 @@ class MoodSpider(object):
                                 return myMood
                             text = r.text
                         except Exception:
-                            print "MoodSpider.beginer:获取Cookie失败，此线程关闭！"
+                            print ("MoodSpider.beginer:获取Cookie失败，此线程关闭！")
                             exit()
                     textlist = re.split('\{"certified"', text)[1:]  # 从第二条开始才是说说内容
                     if len(textlist) == 0:
@@ -138,7 +139,7 @@ class MoodSpider(object):
             self.message.gtk)
         try:
             r = self.message.s.get(url, timeout=self.message.timeout)
-        except Exception, e:
+        except Exception as e:
             return -2
         if r.status_code == 200:
             like = re.findall('"like":(\d+)', r.text)

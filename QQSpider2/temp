@@ -1,0 +1,12 @@
+start InitMessages
+剩余Cookie数: 2
+剩余待爬QQ数: 1
+start SpideController
+2018-07-13 21:14:28.868735: Initial work completed! Now, We start:
+start SpiderMessage
+start blog_spider
+start MoodSpider
+start friend_spider
+start InformationSpider
+2018-07-13 21:14:28.871329 error:b'904999858'
+2018-07-13 21:14:28.975955: Done!
